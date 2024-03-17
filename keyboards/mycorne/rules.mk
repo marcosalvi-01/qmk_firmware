@@ -1,0 +1,22 @@
+# This file intentionally left blank
+LTO_ENABLE 			= yes
+MOUSEKEY_ENABLE 	= no       # Mouse keys
+COMBO_ENABLE 		= yes      # Enable combo keycodes
+CAPS_WORD_ENABLE 	= yes
+TAP_DANCE_ENABLE 	= yes
+
+# MCU name
+MCU = atmega32u4
+
+# Bootloader selection
+BOOTLOADER = caterina
+
+# Remove unused features to save firmware space
+SPACE_CADET_ENABLE 	= no
+GRAVE_ESC_ENABLE 	= no
+MAGIC_ENABLE 		= no
+MUSIC_ENABLE 		= no
+
+# Add custom shift and achordion
+SRC += features/custom_shift_keys.c		# (https://getreuer.info/posts/keyboards/custom-shift-keys/index.html)
+SRC += features/achordion.c 			# (https://getreuer.info/posts/keyboards/achordion/index.html)
