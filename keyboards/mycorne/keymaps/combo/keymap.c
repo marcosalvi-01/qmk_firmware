@@ -181,10 +181,13 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) {
     return false;
 }
 
+
+
 // Caps Word behavior
 bool caps_word_press_user(uint16_t keycode) {
     switch (keycode) {
         // Keycodes that continue Caps Word, with shift applied.
+        case IT_MINS:
         case KC_A ... KC_Z:
             add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
             return true;
@@ -199,7 +202,6 @@ bool caps_word_press_user(uint16_t keycode) {
         case IT_QUOT:
         case IT_SLSH:
         case IT_BSLS:
-        case IT_MINS:
             return true;
 
         default:
@@ -243,8 +245,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 //Encoder alt tab
-bool is_alt_tab_active = false;
-uint16_t alt_tab_timer = 0;
+// bool is_alt_tab_active = false;
+// uint16_t alt_tab_timer = 0;
 
 // Encoder timer for alt tab
 void matrix_scan_user(void) {
@@ -252,17 +254,18 @@ void matrix_scan_user(void) {
     achordion_task();
 
     // Encoder alt tab
-    if (is_alt_tab_active)
-        if (timer_elapsed(alt_tab_timer) > ALT_TAB_TIMER) {
-            unregister_code(KC_LALT);
-            is_alt_tab_active = false;
-        }
+    // if (is_alt_tab_active)
+    //     if (timer_elapsed(alt_tab_timer) > ALT_TAB_TIMER) {
+    //         unregister_code(KC_LALT);
+    //         is_alt_tab_active = false;
+    //     }
 }
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
     // If the highest layer is game, never block.
     if (get_highest_layer(layer_state) == _GAME)
         return true;
+
     // Skip the achordion if the key is not a normal key (combo)
     if (!IS_KEYEVENT(other_record->event))
         return true;
@@ -302,35 +305,35 @@ uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
 }
 
 // Encoder behavior based on the current layer
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    switch(get_highest_layer(layer_state)) {
-        // Alt tab
-        case _BUTTON:
-        case _GAME:
-        case _BASE:
-            if (clockwise) {
-                if (!is_alt_tab_active) {
-                    is_alt_tab_active = true;
-                    register_code(KC_LALT);
-                }
-                alt_tab_timer = timer_read();
-                tap_code16(KC_TAB);
-            } else {
-                if (!is_alt_tab_active) {
-                    is_alt_tab_active = true;
-                    register_code(KC_LALT);
-                }
-                alt_tab_timer = timer_read();
-                tap_code16(S(KC_TAB));
-            }
-            break;
-        // Navigation in applications (switch between tabs)
-        case _SYMBOLS:
-            clockwise ? tap_code16(C(KC_PGDN)) : tap_code16(C(KC_PGUP));
-            break;
-    }
-    return false;
-}
+// bool encoder_update_user(uint8_t index, bool clockwise) {
+//     switch(get_highest_layer(layer_state)) {
+//         // Alt tab
+//         case _BUTTON:
+//         case _GAME:
+//         case _BASE:
+//             if (clockwise) {
+//                 if (!is_alt_tab_active) {
+//                     is_alt_tab_active = true;
+//                     register_code(KC_LALT);
+//                 }
+//                 alt_tab_timer = timer_read();
+//                 tap_code16(KC_TAB);
+//             } else {
+//                 if (!is_alt_tab_active) {
+//                     is_alt_tab_active = true;
+//                     register_code(KC_LALT);
+//                 }
+//                 alt_tab_timer = timer_read();
+//                 tap_code16(S(KC_TAB));
+//             }
+//             break;
+//         // Navigation in applications (switch between tabs)
+//         case _SYMBOLS:
+//             clockwise ? tap_code16(C(KC_PGDN)) : tap_code16(C(KC_PGUP));
+//             break;
+//     }
+//     return false;
+// }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Default Layer
@@ -370,7 +373,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAVIGATION] = LAYOUT_split_3x5_3(
         _______, KC_HOME, KC_UP,   KC_END,  _______,        _______, _______, _______, _______, _______,
         KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT, _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
-        KC_PGDN, _______, IT_LCBR, IT_RCBR, _______,        _______, _______, _______, _______, _______,
+        KC_PGDN, _______, _______, _______, _______,        _______, _______, _______, _______, _______,
                           _______, _______, _______,        _______, _______, _______
     ),
     /* Numbers Layer
@@ -409,8 +412,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     */
     [_SYMBOLS] = LAYOUT_split_3x5_3(
         _______, _______, _______, _______, _______,        BACKTICK, IT_ASTR, IT_AT,   IT_DLR,  IT_HASH,  // TODO
-        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        IT_EXLM,  IT_EQL,  IT_DQUO, IT_LCBR, IT_LBRC,
-        _______, _______, _______, _______, _______,        IT_PERC,  IT_SLSH, IT_LABK, IT_AMPR, IT_PIPE,
+        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        IT_LABK,  IT_EQL,  IT_DQUO, IT_LCBR, IT_LBRC,
+        _______, _______, _______, _______, _______,        IT_PERC,  IT_SLSH, IT_EXLM, IT_AMPR, IT_PIPE,
                           _______, _______, _______,        IT_PLUS,  IT_LPRN, _______
     ),
     /* Button Layer
