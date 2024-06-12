@@ -21,7 +21,10 @@ enum layer_names {
 enum custom_keycodes {
     CLIP = SAFE_RANGE,
     BACKTICK,
+    ALT_TAB_NAV,
 };
+
+bool alt_tab_nav_active = false;
 
 // Tap dance keycodes
 enum td_keycodes {
@@ -35,6 +38,17 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     // If the highest layer is either game or base coming from game, print the layer
     if(get_highest_layer(state) == _GAME || (get_highest_layer(layer_state) == _GAME && get_highest_layer(state) == _BASE))
         uprintf("KBHLayer%u%s\n", get_highest_layer(state), "");
+
+    switch (get_highest_layer(state)) {
+        case _BASE:
+            if (alt_tab_nav_active) {
+                unregister_code(KC_LALT);
+                alt_tab_nav_active = false;
+            }
+            break;
+        default:
+            break;
+    }
     return state;
 }
 
@@ -128,7 +142,6 @@ combo_t key_combos[] = {
 bool caps_word_press_user(uint16_t keycode) {
     switch (keycode) {
         // Keycodes that continue Caps Word, with shift applied.
-        case IT_MINS:
         case KC_A ... KC_Z:
             add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
             return true;
@@ -143,6 +156,7 @@ bool caps_word_press_user(uint16_t keycode) {
         case IT_QUOT:
         case IT_SLSH:
         case IT_BSLS:
+        case IT_MINS:
             return true;
 
         default:
@@ -178,6 +192,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(KC_P6);
             } else {
                 unregister_code(KC_LALT);
+            }
+            return false;
+        case ALT_TAB_NAV:
+            if (record->event.pressed) {
+                // Alt + Tab
+                register_code(KC_LALT);
+                alt_tab_nav_active = true;
+                tap_code16(KC_TAB);
             }
             return false;
         default:
@@ -308,10 +330,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_NAVIGATION] = LAYOUT_split_3x5_3(
-        _______, KC_HOME, KC_UP,   KC_END,  _______,        _______, _______, _______, _______, _______,
-        KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT, _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
-        KC_PGDN, _______, _______, _______, _______,        _______, _______, _______, _______, _______,
-                          _______, _______, _______,        _______, _______, _______
+        _______, KC_HOME, KC_UP,   KC_END,      _______,        _______, _______, _______, _______, _______,
+        KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,     _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
+        KC_PGDN, _______, _______, _______,     _______,        _______, _______, _______, _______, _______,
+                          _______, ALT_TAB_NAV, _______,        _______, _______, _______
     ),
     /* Numbers Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
