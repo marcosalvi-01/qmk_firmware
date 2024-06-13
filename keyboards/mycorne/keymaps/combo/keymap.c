@@ -244,21 +244,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-//Encoder alt tab
-// bool is_alt_tab_active = false;
-// uint16_t alt_tab_timer = 0;
-
 // Encoder timer for alt tab
 void matrix_scan_user(void) {
     // Achordion
     achordion_task();
-
-    // Encoder alt tab
-    // if (is_alt_tab_active)
-    //     if (timer_elapsed(alt_tab_timer) > ALT_TAB_TIMER) {
-    //         unregister_code(KC_LALT);
-    //         is_alt_tab_active = false;
-    //     }
 }
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {

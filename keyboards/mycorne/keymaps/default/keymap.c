@@ -21,7 +21,10 @@ enum layer_names {
 enum custom_keycodes {
     CLIP = SAFE_RANGE,
     BACKTICK,
+    ALT_TAB_NAV
 };
+
+bool alt_tab_nav_active = false;
 
 // Tap dance keycodes
 enum td_keycodes {
@@ -35,6 +38,17 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     // If the highest layer is either game or base coming from game, print the layer
     if(get_highest_layer(state) == _GAME || (get_highest_layer(layer_state) == _GAME && get_highest_layer(state) == _BASE))
         uprintf("KBHLayer%u%s\n", get_highest_layer(state), "");
+
+    switch (get_highest_layer(state)) {
+        case _BASE:
+            if (alt_tab_nav_active) {
+                unregister_code(KC_LALT);
+                alt_tab_nav_active = false;
+            }
+            break;
+        default:
+            break;
+    }
     return state;
 }
 
@@ -180,26 +194,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LALT);
             }
             return false;
+        case ALT_TAB_NAV:
+            if (record->event.pressed) {
+                // Alt + Tab
+                register_code(KC_LALT);
+                alt_tab_nav_active = true;
+                tap_code16(KC_TAB);
+            }
+            return false;
         default:
             return true;
     }
 }
 
-//Encoder alt tab
-// bool is_alt_tab_active = false;
-// uint16_t alt_tab_timer = 0;
-
 // Encoder timer for alt tab
 void matrix_scan_user(void) {
     // Achordion
     achordion_task();
-
-    // Encoder alt tab
-    // if (is_alt_tab_active)
-    //     if (timer_elapsed(alt_tab_timer) > ALT_TAB_TIMER) {
-    //         unregister_code(KC_LALT);
-    //         is_alt_tab_active = false;
-    //     }
 }
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
@@ -308,10 +319,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_NAVIGATION] = LAYOUT_split_3x5_3(
-        _______, KC_HOME, KC_UP,   KC_END,  _______,        _______, _______, _______, _______, _______,
-        KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT, _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
-        KC_PGDN, _______, _______, _______, _______,        _______, _______, _______, _______, _______,
-                          _______, _______, _______,        _______, _______, _______
+        _______, KC_HOME, KC_UP,   KC_END,      _______,        _______, _______, _______, _______, _______,
+        KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,     _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
+        KC_PGDN, _______, _______, _______,     _______,        _______, _______, _______, _______, _______,
+                          _______, ALT_TAB_NAV, _______,        _______, _______, _______
     ),
     /* Numbers Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
