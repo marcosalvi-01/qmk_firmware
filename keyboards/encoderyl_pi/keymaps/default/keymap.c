@@ -407,10 +407,13 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 tap_code16(S(KC_TAB));
             }
             break;
-        // Mouse wheel
         case _SYMBOLS:
-            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);
+            clockwise ? tap_code16(C(KC_PGDN)) : tap_code16(C(KC_PGUP)); // Chrome switch tabs
             break;
+        case _NUMBERS:
+            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
+            break;
+
     }
     return false;
 }
