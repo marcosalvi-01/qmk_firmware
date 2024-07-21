@@ -339,15 +339,7 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
     // Exceptionally consider the following chords as holds, even though they are on the same hand.
     switch (tap_hold_keycode) {
         case LT(_BUTTON, KC_W):
-            if ((other_keycode == KC_X)     ||
-                (other_keycode == KC_V)     ||
-                (other_keycode == KC_Z)     ||
-                (other_keycode == KC_Y)     ||
-                (other_keycode == KC_S)     ||
-                (other_keycode == KC_F4)
-                )
                 return true;
-            break;
     }
 
     // If the other key is a thumb key, don't block.
@@ -437,7 +429,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,         KC_L,         KC_Y,                 KC_P,                                                      KC_F,                     KC_O,         KC_U,         IT_QUES,
         LGUI_T(KC_C), LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),                                              LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_A),
         LT(_BUTTON, KC_W),         KC_J,         KC_V,                 KC_D,                                                      KC_H,                     IT_DOT,       IT_COMM,      IT_MINS,
-                                    LT(_NUMBERS, KC_ESC), LT(_SYMBOLS, KC_SPC), KC_TAB,       LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
+                                     LT(_SYMBOLS, KC_SPC), LT(_NUMBERS, KC_ESC), KC_TAB,       LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
     ),
     /* Navigation Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -457,7 +449,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_HOME, KC_UP,   KC_END,           _______, _______, _______, _______,
         KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,          KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
         KC_PGDN, _______, IT_LCBR, IT_RCBR,          _______, _______, _______, _______,
-                          _______, ALT_TAB_NAV, _______,        _______, _______, _______
+                          ALT_TAB_NAV,_______,  _______,        _______, _______, _______
     ),
     /* Numbers Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -517,7 +509,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______,  _______, LSG(KC_S),                       _______, IT_OGRV,         IT_UGRV, _______,
         _______, C(KC_X),  C(KC_V), C(KC_Z),                        _______, TD(TD_EGRV_SFT), IT_IGRV, IT_AGRV,
         _______, A(KC_F4), _______, C(KC_Y),                         _______, _______,         _______, _______,
-                           _______, C(KC_C),   _______,     _______, _______, _______
+                          C(KC_C), _______,    _______,     _______, _______, _______
     ),
     /* Game Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -557,7 +549,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_F7, KC_F8,   KC_F9,              _______, _______, _______, _______,
         KC_VOLU, KC_F4, KC_F5,   KC_F6,              _______, _______, _______, _______,
         KC_VOLD, KC_F1, KC_F2,   KC_F3,              _______, _______, _______, _______,
-                        KC_MPRV, KC_MPLY, KC_MNXT,         _______, _______, _______
+                        KC_MPLY, KC_MPRV, KC_MNXT,         _______, _______, _______
     ),
 };
 

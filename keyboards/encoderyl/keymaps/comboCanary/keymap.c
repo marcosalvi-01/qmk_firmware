@@ -339,15 +339,7 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
     // Exceptionally consider the following chords as holds, even though they are on the same hand.
     switch (tap_hold_keycode) {
         case LT(_BUTTON, KC_W):
-            if ((other_keycode == KC_X)     ||
-                (other_keycode == KC_V)     ||
-                (other_keycode == KC_Z)     ||
-                (other_keycode == KC_Y)     ||
-                (other_keycode == KC_S)     ||
-                (other_keycode == KC_F4)
-                )
-                return true;
-            break;
+            return true;
     }
 
     // If the other key is a thumb key, don't block.
