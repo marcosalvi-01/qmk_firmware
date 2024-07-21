@@ -101,10 +101,12 @@ void egrv_sft_finished(tap_dance_state_t *state, void *user_data){
                 set_mods(mods);  // Restore shift
                 unregister_code(KC_LALT);
                 return;
-            } else
+            } else {
                 tap_code(IT_EGRV);
-        } else // hold
+            }
+        } else {// hold
             tap_code16(S(IT_EGRV)); // é
+        }
 }
 
 // Tap dance definitions
@@ -248,7 +250,7 @@ const custom_shift_key_t custom_shift_keys[] = {
     {IT_DLR, IT_EURO},      // Shift $ is €
     {IT_QUES, IT_QUOT},     // Shift ? is '
     {LT(_NAVIGATION, KC_BSPC), KC_DEL},      // Shift Backspace is Delete
-    {BACKTICK, TILDE},      // Shift ` is ~
+    {KC_BSPC, KC_DEL},      // Shift Backspace is Delete
 };
 uint8_t NUM_CUSTOM_SHIFT_KEYS = sizeof(custom_shift_keys) / sizeof(custom_shift_key_t);
 
@@ -262,6 +264,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case BACKTICK:
             if (record->event.pressed) {
+                const uint8_t mods = get_mods();
+                if ((mods | get_weak_mods()) & MOD_MASK_SHIFT) {  // Shift is active
+                    return process_record_user(TILDE, record);
+                }
                 // Alt + 96
                 register_code(KC_LALT);
                 tap_code16(KC_P9);
@@ -329,6 +335,20 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
     // Skip the achordion if the key is not a normal key (combo)
     if (!IS_KEYEVENT(other_record->event))
         return true;
+
+    // Exceptionally consider the following chords as holds, even though they are on the same hand.
+    switch (tap_hold_keycode) {
+        case LT(_BUTTON, KC_W):
+            if ((other_keycode == KC_X)     ||
+                (other_keycode == KC_V)     ||
+                (other_keycode == KC_Z)     ||
+                (other_keycode == KC_Y)     ||
+                (other_keycode == KC_S)     ||
+                (other_keycode == KC_F4)
+                )
+                return true;
+            break;
+    }
 
     // If the other key is a thumb key, don't block.
     if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 3)
@@ -413,8 +433,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
         KC_Q,         KC_L,         KC_Y,                 KC_P,                                                      KC_F,                     KC_O,         KC_U,         IT_QUES,
         LGUI_T(KC_C), LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),                                              LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_A),
-        KC_W,         KC_J,         KC_V,                 KC_D,                                                      KC_H,                     IT_DOT,       IT_COMM,      IT_MINS,
-                                    LT(_NUMBERS, KC_ESC), LT(_SYMBOLS, KC_SPC), LT(_BUTTON, KC_TAB),       LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
+        LT(_BUTTON, KC_W),         KC_J,         KC_V,                 KC_D,                                                      KC_H,                     IT_DOT,       IT_COMM,      IT_MINS,
+                                    LT(_NUMBERS, KC_ESC), LT(_SYMBOLS, KC_SPC), KC_TAB,       LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
     ),
     /* Navigation Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -491,10 +511,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_BUTTON] = LAYOUT(
-        _______,  _______, _______, LSG(KC_S),                       _______, IT_OGRV,         IT_UGRV, _______,
-        C(KC_Z),  C(KC_X), C(KC_C), C(KC_V),                         _______, TD(TD_EGRV_SFT), IT_IGRV, IT_AGRV,
-        A(KC_F4), _______, _______, C(KC_Y),                         _______, _______,         _______, _______,
-                           _______, _______,   _______,     _______, _______, _______
+        _______, _______,  _______, LSG(KC_S),                       _______, IT_OGRV,         IT_UGRV, _______,
+        _______, C(KC_X),  C(KC_V), C(KC_Z),                        _______, TD(TD_EGRV_SFT), IT_IGRV, IT_AGRV,
+        _______, A(KC_F4), _______, C(KC_Y),                         _______, _______,         _______, _______,
+                           _______, C(KC_C),   _______,     _______, _______, _______
     ),
     /* Game Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
