@@ -129,7 +129,6 @@ const uint16_t PROGMEM caps_word_combo[] = {KC_L, IT_DOT, COMBO_END};
 const uint16_t PROGMEM escape_combo_game[] = {KC_R, KC_S, KC_T, COMBO_END};
 const uint16_t PROGMEM escape_combo_base[] = {LALT_T(KC_R), LSFT_T(KC_S), LCTL_T(KC_T), COMBO_END};
 const uint16_t PROGMEM caps_lock_combo[] = {KC_D, KC_L, COMBO_END};
-const uint16_t PROGMEM vim_combo[] = {LCTL_T(KC_N), LSFT_T(KC_E), LALT_T(KC_I), COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(game_layer_combo, TG(_GAME)),
@@ -137,7 +136,6 @@ combo_t key_combos[] = {
     COMBO(escape_combo_game, KC_ESC),
     COMBO(caps_lock_combo, KC_CAPS),
     COMBO(escape_combo_base, KC_ESC),
-    COMBO(vim_combo, C(KC_F9)),
 };
 
 // Caps Word behavior
@@ -312,11 +310,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_BASE] = LAYOUT_split_3x5_3(
-        KC_Q,              KC_W,         KC_F,                 KC_P,                 KC_B,                   KC_J,                  KC_H,                     KC_U,         KC_Y,         IT_QUES,
-        LGUI_T(KC_A),      LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),         KC_G,                   KC_M,                  LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_O),
-        LT(_BUTTON, KC_Z), KC_X,         KC_C,                 KC_D,                 KC_V,                   KC_K,                  KC_L,                     IT_DOT,      IT_COMM,       LT(_BUTTON, IT_MINS),
+        KC_W,              KC_L,         KC_Y,                 KC_P,                 KC_B,                   KC_Z,                  KC_F,                     KC_O,         KC_U,         IT_QUES,
+        LGUI_T(KC_C),      LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),         KC_G,                   KC_M,                  LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_A),
+        LT(_BUTTON, KC_Q), KC_J,         KC_V,                 KC_D,                 KC_K,                   KC_X,                  KC_H,                     IT_DOT,      IT_COMM,       LT(_BUTTON, IT_MINS),
                                          LT(_NUMBERS, KC_DEL), LT(_SYMBOLS, KC_SPC), KC_TAB,                 LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
     ),
+    // [_BASE] = LAYOUT_split_3x5_3(
+    //     KC_Q,              KC_W,         KC_F,                 KC_P,                 KC_B,                   KC_J,                  KC_H,                     KC_U,         KC_Y,         IT_QUES,
+    //     LGUI_T(KC_A),      LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),         KC_G,                   KC_M,                  LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_O),
+    //     LT(_BUTTON, KC_Z), KC_X,         KC_C,                 KC_D,                 KC_V,                   KC_K,                  KC_L,                     IT_DOT,      IT_COMM,       LT(_BUTTON, IT_MINS),
+    //                                      LT(_NUMBERS, KC_DEL), LT(_SYMBOLS, KC_SPC), KC_TAB,                 LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
+    // ),
     /* Navigation Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
     * │   │HOM│ ^ │END│   │       │   │   │   │   │   │
