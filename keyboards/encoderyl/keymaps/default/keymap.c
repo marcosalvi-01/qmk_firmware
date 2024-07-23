@@ -439,10 +439,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *               └───┤ 2 │   │Ent├───┘
     *                   └───┘   └───┘
     */
+    // [_GAME] = LAYOUT_split_3x5_3(
+    //     KC_Q, KC_W, KC_F,         KC_P,   KC_B,             KC_J,   KC_H,    KC_U,   TD(TD_Y_CLIP), TO(_BASE),
+    //     KC_A, KC_R, KC_S,         KC_T,   KC_G,             KC_M,   KC_N,    KC_E,   KC_I,          KC_O,
+    //     KC_Z, KC_X, KC_C,         KC_D,   KC_V,             KC_K,   KC_L,    IT_DOT, IT_COMM,       TD(TD_MPLY_MNXT_MPRV),
+    //                 LSFT_T(KC_1), KC_SPC, LALT_T(KC_2),     KC_ENT, KC_BSPC, _______
+    // ),
     [_GAME] = LAYOUT_split_3x5_3(
-        KC_Q, KC_W, KC_F,         KC_P,   KC_B,             KC_J,   KC_H,    KC_U,   TD(TD_Y_CLIP), TO(_BASE),
-        KC_A, KC_R, KC_S,         KC_T,   KC_G,             KC_M,   KC_N,    KC_E,   KC_I,          KC_O,
-        KC_Z, KC_X, KC_C,         KC_D,   KC_V,             KC_K,   KC_L,    IT_DOT, IT_COMM,       TD(TD_MPLY_MNXT_MPRV),
+        KC_1, KC_Q, KC_W,         KC_E,   KC_R,             KC_T,   KC_Y,    KC_U,   TD(TD_Y_CLIP), TO(_BASE),
+        KC_2, KC_A, KC_S,         KC_D,   KC_F,             KC_M,   KC_N,    KC_E,   KC_I,          KC_O,
+        KC_3, KC_Z, KC_X,         KC_C,   KC_V,             KC_K,   KC_L,    IT_DOT, IT_COMM,       TD(TD_MPLY_MNXT_MPRV),
                     LSFT_T(KC_1), KC_SPC, LALT_T(KC_2),     KC_ENT, KC_BSPC, _______
     ),
     /* Function Layer
