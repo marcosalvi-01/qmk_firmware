@@ -21,6 +21,7 @@ enum layer_names {
 enum custom_keycodes {
     CLIP = SAFE_RANGE,
     BACKTICK,
+    TILDE,
     ALT_TAB_NAV,
 };
 
@@ -114,14 +115,14 @@ tap_dance_action_t tap_dance_actions[] = {
 };
 
 // Custom tapping term for specific keys
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case LT(_SYMBOLS, KC_SPC):
-            return 300;
-        default:
-            return TAPPING_TERM;
-    }
-}
+// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case LT(_SYMBOLS, KC_SPC):
+//             return 300;
+//         default:
+//             return TAPPING_TERM;
+//     }
+// }
 
 // Combos
 const uint16_t PROGMEM game_layer_combo[] = {KC_C, KC_D, COMBO_END};
@@ -159,6 +160,7 @@ bool caps_word_press_user(uint16_t keycode) {
         case IT_SLSH:
         case IT_BSLS:
         case IT_MINS:
+        case KC_LEFT_SHIFT:
             return true;
 
         default:
@@ -175,6 +177,8 @@ const custom_shift_key_t custom_shift_keys[] = {
     {IT_LABK, IT_RABK},     // Shift < is >
     {IT_DLR, IT_EURO},      // Shift $ is €
     {IT_QUES, IT_QUOT},     // Shift ? is '
+    {LT(_NAVIGATION, KC_BSPC), KC_DEL},      // Shift Backspace is Delete
+    {KC_BSPC, KC_DEL},      // Shift Backspace is Delete
 };
 uint8_t NUM_CUSTOM_SHIFT_KEYS = sizeof(custom_shift_keys) / sizeof(custom_shift_key_t);
 
@@ -188,10 +192,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case BACKTICK:
             if (record->event.pressed) {
+                const uint8_t mods = get_mods();
+                if ((mods | get_weak_mods()) & MOD_MASK_SHIFT) {  // Shift is active
+                    return process_record_user(TILDE, record);
+                }
                 // Alt + 96
                 register_code(KC_LALT);
                 tap_code16(KC_P9);
                 tap_code16(KC_P6);
+            } else {
+                unregister_code(KC_LALT);
+            }
+            return false;
+        case TILDE:
+            if (record->event.pressed) {
+                const uint8_t mods = get_mods();
+                if ((mods | get_weak_mods()) & MOD_MASK_SHIFT) {  // Shift is active
+                    del_mods(MOD_MASK_SHIFT);   // Disable shift
+                    del_weak_mods(MOD_MASK_SHIFT);
+                    send_keyboard_report();
+                    register_code(KC_LALT);     // Tilde
+                    tap_code(KC_P1);
+                    tap_code(KC_P2);
+                    tap_code(KC_P6);
+                    set_mods(mods);  // Restore shift
+                } else {
+                    register_code(KC_LALT);     // Tilde
+                    tap_code(KC_P1);
+                    tap_code(KC_P2);
+                    tap_code(KC_P6);
+                }
             } else {
                 unregister_code(KC_LALT);
             }
@@ -233,13 +263,8 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
 
     // Exceptionally consider the following chords as holds, even though they are on the same hand.
     switch (tap_hold_keycode) {
-        case LT(_BUTTON, KC_Z):             // cut copy paste redo
-            if ((other_keycode == KC_X)     ||
-                (other_keycode == KC_C)     ||
-                (other_keycode == KC_D)     ||
-                (other_keycode == KC_V))
-                return true;
-            break;
+        case LT(_BUTTON, KC_Z):
+            return true;
     }
 
     // If the other key is a thumb key, don't block.
@@ -292,6 +317,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         case _SYMBOLS:
             clockwise ? tap_code16(C(KC_PGDN)) : tap_code16(C(KC_PGUP));
             break;
+        case _NUMBERS:
+            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
+            break;
     }
     return false;
 }
@@ -343,7 +371,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * ├───┼───┼───┼───┼───┤       ├───┼───┼───┼───┼───┤
     * │   │   │   │   │   │       │   │ 4 │ 5 │ 6 │ ^ │
     * ├───┼───┼───┼───┼───┤       ├───┼───┼───┼───┼───┤
-    * │   │   │   │   │   │       │   │ 1 │ 2 │ 3 │   │
+    * │   │   │   │   │   │       │   │ 1 │ 2 │ 3 │ / │
     * └───┴───┴───┴───┴───┘       └───┴───┴───┴───┴───┘
     *           ┌───┐                   ┌───┐
     *           │   ├───┐           ┌───┤   │
@@ -354,7 +382,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NUMBERS] = LAYOUT_split_3x5_3(
         _______, _______, _______, _______, _______,        _______, KC_7, KC_8, KC_9, _______,
         KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        _______, KC_4, KC_5, KC_6, IT_CIRC,
-        _______, _______, _______, _______, _______,        _______, KC_1, KC_2, KC_3, _______,
+        _______, _______, _______, _______, _______,        _______, KC_1, KC_2, KC_3, IT_SLSH,
                           _______, _______, _______,        _______, KC_0, _______
     ),
     /* Symbols Layer
@@ -372,30 +400,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_SYMBOLS] = LAYOUT_split_3x5_3(
-        _______, _______, _______, _______, _______,        BACKTICK, IT_ASTR, IT_AT,   IT_DLR,  IT_HASH,  // TODO
-        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        IT_LABK,  IT_EQL,  IT_DQUO, IT_LCBR, IT_LBRC,
-        _______, _______, _______, _______, _______,        IT_PERC,  IT_SLSH, IT_EXLM, IT_AMPR, IT_PIPE,
-                          _______, _______, _______,        IT_PLUS,  IT_LPRN, _______
+        _______, _______, _______, _______, _______,        BACKTICK, IT_LABK, IT_LCBR, IT_AMPR, IT_PIPE,
+        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        IT_DLR,   IT_PERC, IT_LPRN, IT_PLUS, IT_DQUO,
+        _______, _______, _______, _______, _______,        IT_AT,    IT_EQL,  IT_LBRC, IT_EXLM, IT_ASTR,
+                          _______, _______, _______,        IT_HASH,  IT_SLSH, _______
     ),
     /* Button Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
-    * │   │   │   │   │   │       │   │   │   │   │   │
+    * │   │   │   │   │AF4│       │   │   │ ù │   │QMK│
     * ├───┼───┼───┼───┼───┤       ├───┼───┼───┼───┼───┤
-    * │   │   │   │   │   │       │   │PSC│   │   │   │
+    * │ à │   │   │PSC│   │       │   │   │ è │ ì │ ò │
     * ├───┼───┼───┼───┼───┤       ├───┼───┼───┼───┼───┤
     * │UND│CUT│CPY│PST│RDO│       │RDO│PST│CPY│CUT│UND│
     * └───┴───┴───┴───┴───┘       └───┴───┴───┴───┴───┘
     *           ┌───┐                   ┌───┐
     *           │   ├───┐           ┌───┤   │
-    *           └───┤   ├───┐   ┌───┤   ├───┘
+    *           └───┤UND├───┐   ┌───┤   ├───┘
     *               └───┤   │   │   ├───┘
     *                   └───┘   └───┘
     */
     [_BUTTON] = LAYOUT_split_3x5_3(
-        _______, _______, _______, _______, _______,        LALT(KC_F4), _______,   IT_UGRV, _______, _______,
-        IT_AGRV, _______, _______, _______, _______,        _______,     LSG(KC_S), TD(TD_EGRV_SFT), IT_IGRV, IT_OGRV,
+        _______, _______, _______, _______, LALT(KC_F4),        _______, _______,   IT_UGRV, _______, QK_BOOTLOADER,
+        IT_AGRV, _______, _______, LSG(KC_S), _______,      _______,  _______, TD(TD_EGRV_SFT), IT_IGRV, IT_OGRV,
         C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_Y),        C(KC_Y),     C(KC_V),   C(KC_C), C(KC_X), C(KC_Z),
-                          _______, _______, _______,        _______,     _______,   _______
+                          _______, C(KC_Z), _______,        _______,     _______,   _______
     ),
     /* Game Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐

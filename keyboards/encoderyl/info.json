@@ -2,7 +2,7 @@
     "manufacturer": "Marco-Salvi",
     "keyboard_name": "encoderyl",
     "maintainer": "Marco-Salvi",
-    "bootloader": "atmel-dfu",
+    "bootloader": "caterina",
     "features": {
         "command": false,
         "console": true,
