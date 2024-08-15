@@ -1,0 +1,6 @@
+{
+    "editor.wordWrap": "off",
+    "[json]": {
+        "editor.formatOnSave": false
+    }
+}
