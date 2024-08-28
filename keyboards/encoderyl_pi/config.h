@@ -8,7 +8,7 @@
  *  These options are also useful to firmware size reduction.
  */
 
-#define MASTER_LEFT
+#define MASTER_RIGHT
 
 #define TAPPING_TERM 300
 // #define TAPPING_TERM_PER_KEY

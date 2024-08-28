@@ -14,8 +14,8 @@
     "encoder": {
         "rotary": [
             {
-                "pin_a": "GP4",
-                "pin_b": "GP21",
+                "pin_a": "GP13",
+                "pin_b": "GP15",
                 "resolution": 1
             }
         ]

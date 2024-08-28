@@ -292,8 +292,18 @@ uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
   return ACHORDION_TIMEOUT;
 }
 
+static int8_t ticks = 2;
+
 // Encoder behavior based on the current layer
 bool encoder_update_user(uint8_t index, bool clockwise) {
+
+    // Execute only once every 4 steps
+    if (ticks++ < 2)
+        return false;
+
+    // Reset the ticks counter
+    ticks = 1;
+
     switch(get_highest_layer(layer_state)) {
         // Alt tab
         case _BUTTON:
@@ -315,7 +325,6 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 tap_code16(S(KC_TAB));
             }
             break;
-        // Navigation in applications (switch between tabs)
         case _SYMBOLS:
             clockwise ? tap_code16(C(KC_PGDN)) : tap_code16(C(KC_PGUP));
             break;
