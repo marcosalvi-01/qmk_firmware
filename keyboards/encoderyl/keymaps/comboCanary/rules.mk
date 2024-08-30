@@ -11,3 +11,7 @@ SPACE_CADET_ENABLE 	= no
 GRAVE_ESC_ENABLE 	= no
 MAGIC_ENABLE 		= no
 MUSIC_ENABLE 		= no
+
+# Add custom shift and achordion
+SRC += features/custom_shift_keys.c		# (https://getreuer.info/posts/keyboards/custom-shift-keys/index.html)
+SRC += features/achordion.c 			# (https://getreuer.info/posts/keyboards/achordion/index.html)
