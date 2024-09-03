@@ -10,14 +10,12 @@
 
 #define MASTER_RIGHT
 
-#define TAPPING_TERM 300
-// #define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM 200
+#define TAPPING_TERM_PER_KEY
 
 #define ALT_TAB_TIMER 800
 
-#define ACHORDION_TIMEOUT 800
-
-#define CAPS_WORD_IDLE_TIMEOUT 10000  // 10 seconds.
+#define CAPS_WORD_IDLE_TIMEOUT 5000  // 10 seconds.
 
 #define QUICK_TAP_TERM 0    // Disable key repeat on mod tap keys
 
@@ -28,5 +26,5 @@
 #undef LOCKING_RESYNC_ENABLE
 #define NO_ACTION_ONESHOT
 
-#define ACHORDION_STREAK
-#define COMBO_MUST_TAP_PER_COMBO
+#define MAX_DEFERRED_EXECUTORS 10
+#define SMTD_GLOBAL_RELEASE_TERM 20
