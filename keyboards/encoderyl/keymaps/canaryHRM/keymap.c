@@ -57,12 +57,12 @@ void on_smtd_action(uint16_t keycode, smtd_action action, uint8_t tap_count) {
         SMTD_MT(CKC_C, KC_C, KC_LEFT_GUI)
         SMTD_MT(CKC_R, KC_R, KC_LEFT_ALT)
         SMTD_MT(CKC_S, KC_S, KC_LSFT)
-        SMTD_MTE(CKC_T, KC_T, KC_LEFT_CTRL)
+        SMTD_MT(CKC_T, KC_T, KC_LEFT_CTRL)
 
         SMTD_MT(CKC_A, KC_A, KC_LEFT_GUI)
         SMTD_MT(CKC_I, KC_I, KC_LEFT_ALT)
         SMTD_MT(CKC_E, KC_E, KC_LSFT)
-        SMTD_MTE(CKC_N, KC_N, KC_LEFT_CTRL)
+        SMTD_MT(CKC_N, KC_N, KC_LEFT_CTRL)
 
         SMTD_LT(CKC_W, KC_W, _BUTTON)
 
@@ -349,6 +349,8 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         // Alt tab
         case _BUTTON:
         case _GAME:
+            // disable the game layer
+            layer_off(_GAME);
         case _BASE:
             if (clockwise) {
                 if (!is_alt_tab_active) {
