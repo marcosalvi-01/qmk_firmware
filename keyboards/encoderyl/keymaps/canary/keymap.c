@@ -32,7 +32,40 @@ enum td_keycodes {
     TD_MPLY_MNXT_MPRV,  // Tap dance for media play, next and previous
     TD_Y_CLIP,          // Tap dance for y and clip with nvidia shadowplay
     TD_EGRV_SFT,
+    TD_EMAIL,
 };
+
+// Email macro
+void email_on_press(tap_dance_state_t *state, void *user_data){
+    // Empty function to follow the function signature, the important part is the release function
+}
+void email_on_release(tap_dance_state_t *state, void *user_data){
+    switch (((state->count - 1) % 3) + 1) {
+        case 1:
+            if (state->count > 3) {
+                // Delete the previous email
+                for (int i = 0; i < 22; i++) {
+                    register_code(KC_BSPC);
+                }
+            }
+            SEND_STRING("marco.salvi@ingv.it");
+            break;
+        case 2:
+            // Delete the previous email
+            for (int i = 0; i < 19; i++) {
+                register_code(KC_BSPC);
+            }
+            SEND_STRING("mykratos00@gmail.com");
+            break;
+        case 3:
+            // Delete the previous email
+            for (int i = 0; i < 20; i++) {
+                register_code(KC_BSPC);
+            }
+            SEND_STRING("1marco.salvi@gmail.com");
+            break;
+    }
+}
 
 // Used by Autohotkey to display the current layer info (only game and default)
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -111,18 +144,18 @@ void egrv_sft_finished(tap_dance_state_t *state, void *user_data){
 tap_dance_action_t tap_dance_actions[] = {
     [TD_MPLY_MNXT_MPRV] = ACTION_TAP_DANCE_FN(pause_next_previous),
     [TD_Y_CLIP] = ACTION_TAP_DANCE_FN(y_clip),
-    [TD_EGRV_SFT] = ACTION_TAP_DANCE_FN(egrv_sft_finished)
+    [TD_EGRV_SFT] = ACTION_TAP_DANCE_FN(egrv_sft_finished),
+    [TD_EMAIL] = ACTION_TAP_DANCE_FN_ADVANCED_WITH_RELEASE(email_on_press, email_on_release, email_on_press, email_on_press),
 };
 
-// Custom tapping term for specific keys
-// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case LT(_SYMBOLS, KC_SPC):
-//             return 300;
-//         default:
-//             return TAPPING_TERM;
-//     }
-// }
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case TD(TD_EMAIL):
+            return 2000;
+        default:
+            return TAPPING_TERM;
+    }
+}
 
 // Combos
 const uint16_t PROGMEM game_layer_combo[] = {KC_V, KC_D, COMBO_END};
@@ -131,7 +164,7 @@ const uint16_t PROGMEM caps_word_combo[] = {KC_H, IT_DOT, COMBO_END};
 const uint16_t PROGMEM escape_combo_game[] = {KC_A, KC_S, KC_D, COMBO_END};
 const uint16_t PROGMEM escape_combo_base[] = {LALT_T(KC_R), LSFT_T(KC_S), LCTL_T(KC_T), COMBO_END};
 const uint16_t PROGMEM caps_lock_combo[] = {KC_D, KC_H, COMBO_END};
-const uint16_t PROGMEM vim_combo[] = {LCTL_T(KC_N), LSFT_T(KC_E), LALT_T(KC_I), COMBO_END};
+const uint16_t PROGMEM vim_combo[] = {LCTL_T(KC_N), LSFT_T(KC_E), COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(game_layer_combo, TG(_GAME)),
@@ -140,7 +173,7 @@ combo_t key_combos[] = {
     COMBO(escape_combo_game, KC_ESC),
     COMBO(caps_lock_combo, KC_CAPS),
     COMBO(escape_combo_base, KC_ESC),
-    COMBO(vim_combo, C(KC_F9)),
+    COMBO(vim_combo, KC_ESC),
 };
 
 // Caps Word behavior
@@ -423,7 +456,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     */
     [_BUTTON] = LAYOUT_split_3x5_3(
         _______, _______, _______, _______, LALT(KC_F4),        _______, _______,  IT_OGRV, IT_UGRV, QK_BOOTLOADER,
-        _______, _______, _______, LSG(KC_S), _______,      _______,  _______, TD(TD_EGRV_SFT), IT_IGRV, IT_AGRV,
+        _______, _______, _______, LSG(KC_S), _______,      _______,  TD(TD_EMAIL), TD(TD_EGRV_SFT), IT_IGRV, IT_AGRV,
         C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_Y),        C(KC_Y),     C(KC_V),   C(KC_C), C(KC_X), C(KC_Z),
                           _______, C(KC_Z), _______,        _______,     _______,   _______
     ),
