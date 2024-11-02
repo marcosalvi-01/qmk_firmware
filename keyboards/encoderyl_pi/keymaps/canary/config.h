@@ -11,7 +11,7 @@
 #define MASTER_RIGHT
 
 #define TAPPING_TERM 300
-// #define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM_PER_KEY
 
 #define ALT_TAB_TIMER 800
 
