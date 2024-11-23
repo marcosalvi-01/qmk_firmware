@@ -15,6 +15,7 @@ enum layer_names {
     _SYMBOLS    = 3,
     _BUTTON     = 4,
     _FUNCTION   = 5,
+    _SHORTCUTS  = 6,
     _GAME       = 7,    // Needs to be 7 because that's what the Autohotkey script expects
 };
 
@@ -375,10 +376,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_BASE] = LAYOUT_split_3x5_3(
-        KC_Q,              KC_L,         KC_Y,                 KC_P,                 KC_B,                   KC_Z,                  KC_F,                     KC_O,         KC_U,         IT_QUES,
-        LGUI_T(KC_C),      LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),         KC_G,                   KC_M,                  LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_A),
-        LT(_BUTTON, KC_W), KC_J,         KC_V,                 KC_D,                 KC_K,                   KC_X,                  KC_H,                     IT_DOT,      IT_COMM,       LT(_BUTTON, IT_MINS),
-                                         LT(_NUMBERS, KC_DEL), LT(_SYMBOLS, KC_SPC), KC_TAB,                 LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
+        KC_Q,              KC_L,         KC_Y,                 KC_P,                 KC_B,                                   KC_Z,                  KC_F,                     KC_O,         KC_U,         IT_QUES,
+        LGUI_T(KC_C),      LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),         KC_G,                                   KC_M,                  LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_A),
+        LT(_BUTTON, KC_W), KC_J,         KC_V,                 KC_D,                 KC_K,                                   KC_X,                  KC_H,                     IT_DOT,      IT_COMM,       LT(_BUTTON, IT_MINS),
+                                         LT(_NUMBERS, KC_DEL), LT(_SYMBOLS, KC_SPC), LT(_SHORTCUTS, KC_TAB),                 LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
     ),
     /* Navigation Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -419,6 +420,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        _______, KC_4, KC_5, KC_6, IT_CIRC,
         _______, _______, _______, _______, _______,        _______, KC_1, KC_2, KC_3, IT_SLSH,
                           _______, _______, _______,        _______, KC_0, _______
+    ),
+    [_SHORTCUTS] = LAYOUT_split_3x5_3(
+        _______, _______, _______, _______, _______,        _______, HYPR(KC_7), HYPR(KC_8), HYPR(KC_9), _______,
+        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,        _______, HYPR(KC_4), HYPR(KC_5), HYPR(KC_6), _______,
+        _______, _______, _______, _______, _______,        _______, HYPR(KC_1), HYPR(KC_2), HYPR(KC_3), _______,
+                          _______, _______, _______,        _______, HYPR(KC_0), _______
     ),
     /* Symbols Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
