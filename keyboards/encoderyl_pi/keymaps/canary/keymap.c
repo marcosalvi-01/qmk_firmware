@@ -15,6 +15,7 @@ enum layer_names {
     _SYMBOLS    = 3,
     _BUTTON     = 4,
     _FUNCTION   = 5,
+    _SHORTCUTS  = 6,
     _GAME       = 7,    // Needs to be 7 because that's what the Autohotkey script expects
 };
 
@@ -339,10 +340,15 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     ticks = 1;
 
     switch(get_highest_layer(layer_state)) {
-        // Alt tab
-        case _BUTTON:
-        case _GAME:
         case _BASE:
+        case _BUTTON:
+            if (clockwise) {
+                tap_code16(C(KC_I));
+            } else {
+                tap_code16(C(KC_O));
+            }
+            break;
+        case _GAME:
             if (clockwise) {
                 if (!is_alt_tab_active) {
                     is_alt_tab_active = true;
@@ -359,10 +365,12 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 tap_code16(S(KC_TAB));
             }
             break;
+        // Navigation in applications (switch between tabs)
         case _SYMBOLS:
             clockwise ? tap_code16(C(KC_PGDN)) : tap_code16(C(KC_PGUP));
             break;
         case _NUMBERS:
+        case _FUNCTION:
             clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
             break;
     }
@@ -388,7 +396,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,              KC_L,         KC_Y,                 KC_P,                 KC_B,                   KC_Z,                  KC_F,                     KC_O,         KC_U,         IT_QUES,
         LGUI_T(KC_C),      LALT_T(KC_R), LSFT_T(KC_S),         LCTL_T(KC_T),         KC_G,                   KC_M,                  LCTL_T(KC_N),             LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_A),
         LT(_BUTTON, KC_W), KC_J,         KC_V,                 KC_D,                 KC_K,                   KC_X,                  KC_H,                     IT_DOT,      IT_COMM,       LT(_BUTTON, IT_MINS),
-                                         LT(_NUMBERS, KC_DEL), LT(_SYMBOLS, KC_SPC), KC_TAB,                 LT(_FUNCTION, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
+                                         LT(_NUMBERS, KC_DEL), LT(_SYMBOLS, KC_SPC), LT(_FUNCTION, KC_TAB),                 LT(_SHORTCUTS, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_ESC
     ),
     /* Navigation Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -409,6 +417,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,     _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
         KC_PGDN, _______, _______, _______,     _______,        _______, _______, _______, _______, _______,
                           _______, ALT_TAB_NAV, _______,        _______, _______, _______
+    ),
+    [_SHORTCUTS] = LAYOUT_split_3x5_3(
+        _______, HYPR(KC_9), HYPR(KC_8), HYPR(KC_7), _______,        _______, _______, _______, _______, _______,
+        _______, HYPR(KC_6), HYPR(KC_5), HYPR(KC_4), _______,        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,
+        _______, HYPR(KC_3), HYPR(KC_2), HYPR(KC_1), _______,        _______, _______, _______, _______, _______,
+                          _______, HYPR(KC_0), _______,        _______, _______, _______
     ),
     /* Numbers Layer
     * ┌───┬───┬───┬───┬───┐       ┌───┬───┬───┬───┬───┐
@@ -505,10 +519,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_FUNCTION] = LAYOUT_split_3x5_3(
-        _______, KC_F7, KC_F8,   KC_F9,   KC_F12,          _______, _______, _______, _______, _______,
-        KC_VOLU, KC_F4, KC_F5,   KC_F6,   KC_F11,          _______, _______, _______, _______, _______,
-        KC_VOLD, KC_F1, KC_F2,   KC_F3,   KC_F10,          _______, _______, _______, _______, _______,
-                        KC_MPRV, KC_MPLY, KC_MNXT,         _______, _______, _______
+        _______, _______, _______, _______, _______,         KC_MNXT, KC_F7, KC_F8,   KC_F9,   KC_F12,
+        KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,         KC_MPLY, KC_F4, KC_F5,   KC_F6,   KC_F11,
+        _______, _______, _______, _______, _______,         KC_MPRV, KC_F1, KC_F2,   KC_F3,   KC_F10,
+                          _______, _______, _______,         KC_MPRV, KC_MPLY, KC_MNXT
     ),
 };
 
