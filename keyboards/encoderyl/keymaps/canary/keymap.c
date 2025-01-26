@@ -331,11 +331,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     switch(get_highest_layer(layer_state)) {
         case _BASE:
         case _BUTTON:
-            if (clockwise) {
-                tap_code16(C(KC_I));
-            } else {
-                tap_code16(C(KC_O));
-            }
+            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
             break;
         case _GAME:
             if (clockwise) {
