@@ -354,11 +354,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     switch(get_highest_layer(layer_state)) {
         case _BASE:
         case _BUTTON:
-            if (clockwise) {
-                tap_code16(C(KC_I));
-            } else {
-                tap_code16(C(KC_O));
-            }
+            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
             break;
         case _GAME:
             if (clockwise) {
@@ -428,7 +424,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_HOME, KC_UP,   KC_END,      _______,        _______, _______, _______, _______, _______,
         KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,     _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
         KC_PGDN, _______, _______, _______,     _______,        _______, _______, _______, _______, _______,
-                          _______, ALT_TAB_NAV, _______,        _______, _______, _______
+                          _______, _______, _______,        _______, _______, _______
     ),
     [_SHORTCUTS] = LAYOUT_split_3x5_3(
         _______, HYPR(KC_9), HYPR(KC_8), HYPR(KC_7), _______,        _______, _______, _______, _______, _______,
