@@ -5,6 +5,7 @@
 #include "keymap_italian.h"
 #include "sendstring_italian.h"
 #include "print.h"
+#include "raw_hid.h"
 #include "features/custom_shift_keys.h"
 #include "features/achordion.h"
 
@@ -68,11 +69,22 @@ void email_on_release(tap_dance_state_t *state, void *user_data){
     }
 }
 
-// Used by Autohotkey to display the current layer info (only game and default)
+// OLD: Used by Autohotkey to display the current layer info (only game and default)
+/* if(get_highest_layer(state) == _GAME || (get_highest_layer(layer_state) == _GAME && get_highest_layer(state) == _BASE)) */
+/*     uprintf("KBHLayer%u%s\n", get_highest_layer(state), ""); */
+
 layer_state_t layer_state_set_user(layer_state_t state) {
     // If the highest layer is either game or base coming from game, print the layer
-    if(get_highest_layer(state) == _GAME || (get_highest_layer(layer_state) == _GAME && get_highest_layer(state) == _BASE))
-        uprintf("KBHLayer%u%s\n", get_highest_layer(state), "");
+    if (get_highest_layer(state) == _GAME ||
+       (get_highest_layer(layer_state) == _GAME && get_highest_layer(state) == _BASE)) {
+        char report[32];
+        // Clear the buffer to ensure unused bytes are zero
+        memset(report, 0, sizeof(report));
+        // Fill the buffer with your layer message
+        snprintf(report, sizeof(report), "%u", get_highest_layer(state));
+        // Send exactly 32 bytes over the raw HID interface
+        raw_hid_send((uint8_t *)report, sizeof(report));
+    }
 
     switch (get_highest_layer(state)) {
         case _BASE:
