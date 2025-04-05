@@ -81,7 +81,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         // Clear the buffer to ensure unused bytes are zero
         memset(report, 0, sizeof(report));
         // Fill the buffer with your layer message
-        snprintf(report, sizeof(report), "%u", get_highest_layer(state));
+        snprintf(report, sizeof(report), "[%u]", get_highest_layer(state));
         // Send exactly 32 bytes over the raw HID interface
         raw_hid_send((uint8_t *)report, sizeof(report));
     }
@@ -363,6 +363,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 alt_tab_timer = timer_read();
                 tap_code16(S(KC_TAB));
             }
+            layer_move(_BASE);
             break;
         // Navigation in applications (switch between tabs)
         case _SYMBOLS:
@@ -370,7 +371,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
             break;
         case _NUMBERS:
         case _FUNCTION:
-            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
+            clockwise ? tap_code16(KC_VOLU) : tap_code16(KC_VOLD);  // Scroll wheel
             break;
     }
     return false;

@@ -23,6 +23,9 @@
 
 #define PERMISSIVE_HOLD
 
+#define RAW_USAGE_PAGE 0xFF60
+#define RAW_USAGE_ID 0x61
+
 // Disable unused features to reduce firmware size
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
