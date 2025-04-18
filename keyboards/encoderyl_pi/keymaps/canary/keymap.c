@@ -25,6 +25,7 @@ enum custom_keycodes {
     BACKTICK,
     TILDE,
     ALT_TAB_NAV,
+    TMUX_SESSIONIZER,
 };
 
 bool alt_tab_nav_active = false;
@@ -283,6 +284,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(KC_TAB);
             }
             return false;
+        case TMUX_SESSIONIZER:
+            if (record->event.pressed) {
+                register_code(KC_LCTL);
+                tap_code16(KC_T);
+                unregister_code(KC_LCTL);
+                tap_code16(KC_SPC);
+            }
         default:
             return true;
     }
@@ -354,7 +362,17 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     switch(get_highest_layer(layer_state)) {
         case _BASE:
         case _BUTTON:
-            clockwise ? tap_code16(KC_WH_D) : tap_code16(KC_WH_U);  // Scroll wheel
+            if (clockwise) {
+                // neovim hunk next
+                tap_code16(KC_SPC);
+                tap_code16(KC_H);
+                tap_code16(KC_N);
+            } else {
+                // neovim hunk prev
+                tap_code16(KC_SPC);
+                tap_code16(KC_H);
+                tap_code16(KC_P);
+            }
             break;
         case _GAME:
             if (clockwise) {
@@ -421,10 +439,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *                   └───┘   └───┘
     */
     [_NAVIGATION] = LAYOUT_split_3x5_3(
-        _______, KC_HOME, KC_UP,   KC_END,      _______,        _______, _______, _______, _______, _______,
-        KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,     _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
-        KC_PGDN, _______, _______, _______,     _______,        _______, _______, _______, _______, _______,
-                          _______, _______, _______,        _______, _______, _______
+        _______, KC_HOME, KC_UP,   KC_END,           _______,        _______, _______, _______, _______, _______,
+        KC_PGUP, KC_LEFT, KC_DOWN, KC_RGHT,          _______,        _______, KC_LCTL, KC_LSFT, KC_LALT, KC_LGUI,
+        KC_PGDN, _______, _______, _______,          _______,        _______, _______, _______, _______, _______,
+                          _______, TMUX_SESSIONIZER, _______,        _______, _______, _______
     ),
     [_SHORTCUTS] = LAYOUT_split_3x5_3(
         _______, HYPR(KC_9), HYPR(KC_8), HYPR(KC_7), _______,        _______, _______, _______, _______, _______,
