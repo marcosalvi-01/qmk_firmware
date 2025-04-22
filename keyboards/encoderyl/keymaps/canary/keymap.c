@@ -290,7 +290,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 register_code(KC_LCTL);
                 tap_code16(KC_T);
                 unregister_code(KC_LCTL);
-                tap_code16(KC_SPC);
+                tap_code16(KC_O);
             }
         default:
             return true;
